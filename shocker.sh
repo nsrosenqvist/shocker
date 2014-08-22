@@ -89,7 +89,7 @@ function strip_multi_slash() {
 # @author Niklas Rosenqvist
 #/
 function write() {
-    echo "$1" >> "$OUTPUT"
+    echo -e "$1" >> "$OUTPUT"
 }
 
 #/
@@ -377,7 +377,7 @@ function parse_file() {
                             summary="$line"
                         else
                             # Add a space if we're on a multiline description
-                            if [ -n "$description" ]; then
+                            if [ -n "$description" ] && [ "${description:$((${#description}-2)):2}" != '\n' ]; then
                                 description+=" "
                             fi
 
