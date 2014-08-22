@@ -1,7 +1,7 @@
 Shocker
 =======
 
-Shocker is an utility to generate markdown formatted documentation from shell source files. The resulting files can easily be used to create an online api since it's compatible with the excellent [mkdocs](http://www.mkdocs.org/)! The generated markdown is "[GitHub flavoured](https://help.github.com/articles/github-flavored-markdown)", meaning that it supports GitHub's (and mkdocs) syntax highlighting and table definitions.
+Shocker is an utility to generate markdown formatted documentation from shell source files. The resulting files can easily be used to create an online API since it's compatible with the excellent [mkdocs](http://www.mkdocs.org/)! The generated markdown is "[GitHub flavoured](https://help.github.com/articles/github-flavored-markdown)", meaning that it supports GitHub's (and mkdocs) syntax highlighting and table definitions.
 
 Comments should be formatted in a DocBlocks syntax and can be either single line or multiline. The start and end of a comment that should be processed is marked by the following character combination: `#/`
 
@@ -79,9 +79,10 @@ Parameter | Explanation
 -t        | Set the file heading
 -f        | Allow file overwrites. If not set the program will abort when it attempts to overwrite an existing file.
 -o        | Output file or directory
--x        | "0" for including the filename's extension in the file heading and "1" (false) to exclude it.
+-x        | Set to include file extensions in headings.
 -c        | Specify a copyright statement that will be added to the end of each file.
--T        | Create an index file with a table of contents, only applicable when processing directories.
+-T        | Create an index file with a table of contents (Will be named "Home.md"), only applicable when processing directories.
+-C        | Set to capitalize file names and headings.
 
 ## Development
 

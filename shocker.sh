@@ -30,6 +30,7 @@ EXTENSION=1
 FORCE=1
 COPYRIGHT=""
 ToC=1
+CAPITALIZE=1
 declare -A PARAMS=()
 declare -A PROPERTIES=()
 
@@ -249,6 +250,10 @@ function parse_file() {
         if [ $EXTENSION -ne 0 ]; then
             title="${title%.*}"
         fi
+
+        if [ $CAPITALIZE -eq 0 ]; then
+            title="${title^}"
+        fi
     fi
 
     write "$title"
@@ -402,7 +407,7 @@ function parse_file() {
 }
 
 # Parse the options
-while getopts "t:fo:x:c:T" opt; do
+while getopts "t:fo:xc:TC" opt; do
     case "$opt" in
         t)
             # Specify file heading
@@ -417,12 +422,16 @@ while getopts "t:fo:x:c:T" opt; do
             OUTPUT="$OPTARG"
         ;;
         x)
-            # 1/0 whether the file extension should be shown in the file heading
-            EXTENSION=$OPTARG
+            # Set if you want file extensions in headings
+            EXTENSION=0
         ;;
         c)
             # Copyright statement
             COPYRIGHT="$(trim_whitespace "$OPTARG")"
+        ;;
+        C)
+            # Capitalize file names
+            CAPITALIZE=0
         ;;
         T)
             # Create a Table Of Contents
@@ -446,14 +455,18 @@ if [ -d "$1" ]; then
     fi
 
     files_parsed=()
-    filesroot="$OUTPUT"
-    filesdir="$filesroot/api/"
+    filesdir="$OUTPUT"
     mkdir -p "$filesdir"
 
     # Loop through all files found in the directory
     while IFS= read -r file; do
         filename="$(basename "$file")"
         filename="${filename%.*}.md"
+
+        if [ $CAPITALIZE -eq 0 ]; then
+            filename="${filename^}"
+        fi
+
         OUTPUT="$filesdir/$filename"
 
         # Abort if we have to overwrite a file and the forced flag is off
@@ -475,7 +488,7 @@ if [ -d "$1" ]; then
     # Create the Table of Contents if set to do so
     if [ $ToC -eq 0 ]; then
         # Write file heading
-        OUTPUT="$filesroot/index.md"
+        OUTPUT="$(cd "$filesdir" && cd .. && pwd)/Home.md"
 
         # Abort if we have to overwrite a file and the forced flag is off
         if [ -e "$OUTPUT" ]; then
@@ -516,6 +529,22 @@ else
     if [ -z "$OUTPUT" ]; then
         OUTPUT="$(basename "$1")"
         OUTPUT="${OUTPUT%.*}.md"
+
+        if [ $CAPITALIZE -eq 0 ]; then
+            OUTPUT="${OUTPUT^}"
+        fi
+    else
+        # If output is set to directory we create the new file within the directory
+        if [ -d "$OUTPUT" ]; then
+            filename="$(basename "$1")"
+
+            if [ $CAPITALIZE -eq 0 ]; then
+                filename="${filename^}"
+            fi
+
+            OUTPUT="$OUTPUT/$filename"
+            OUTPUT="${OUTPUT%.*}.md"
+        fi
     fi
 
     # Abort if we have to overwrite a file and the forced flag is off
