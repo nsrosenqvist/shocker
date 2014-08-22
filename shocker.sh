@@ -546,6 +546,8 @@ if [ -d "$1" ]; then
             fi
             
             if [ $GITHUB -eq 0 ]; then
+                file="$(basename "$file")"
+                file="${file%.*}"
                 write "- [$title]($(basename "$file"))"
             else
                 write "- [$title]($(strip_multi_slash "${file/$outputroot\//}"))"
