@@ -212,6 +212,10 @@ function write_block() {
         write ""
     fi
 
+    # Append a hr
+    write "$(repeat_character "-" 30)"
+    write ""
+
     return 0
 }
 
@@ -403,7 +407,6 @@ function parse_file() {
 
     # Append the copyright statement
     if [ -n "$COPYRIGHT" ]; then
-        write "$(repeat_character "-" ${#COPYRIGHT})"
         write "$COPYRIGHT"
         write ""
     fi
