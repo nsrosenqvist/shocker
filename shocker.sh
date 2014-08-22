@@ -488,7 +488,8 @@ if [ -d "$1" ]; then
     # Create the Table of Contents if set to do so
     if [ $ToC -eq 0 ]; then
         # Write file heading
-        OUTPUT="$(cd "$filesdir" && cd .. && pwd)/Home.md"
+        outputroot="$(dirname "$filesdir")"
+        OUTPUT="$outputroot/Home.md"
 
         # Abort if we have to overwrite a file and the forced flag is off
         if [ -e "$OUTPUT" ]; then
@@ -519,8 +520,8 @@ if [ -d "$1" ]; then
             if [ $EXTENSION -ne 0 ]; then
                 title="${title%.*}"
             fi
-
-            write "- [$title]($(strip_multi_slash "${file/$filesroot\//}"))"
+            #echo "$outputroot : $file"
+            write "- [$title]($(strip_multi_slash "${file/$outputroot\//}"))"
         done
     fi
 # Processing a single file
