@@ -31,6 +31,7 @@ FORCE=1
 COPYRIGHT=""
 ToC=1
 CAPITALIZE=1
+GITHUB=1
 declare -A PARAMS=()
 declare -A PROPERTIES=()
 
@@ -151,6 +152,10 @@ function write_block() {
         done
 
         # Write out the parameters and their descriptions into a formatted table
+        # Start with the table header
+        write "| $(pad_string Parameter $maxkeylength) | $(pad_string Explanation $maxvallength) |"
+        write "| $(repeat_character "-" $maxkeylength) | $(repeat_character "-" $maxvallength) |"
+
         # We loop from the back since the associative arrays are reversed
         for ((i=${#PARAMS[@]}-1; i>=0; i--)); do
             towrite="| $(pad_string "${tableparamskey[$i]}" $maxkeylength) |"
@@ -407,7 +412,7 @@ function parse_file() {
 }
 
 # Parse the options
-while getopts "t:fo:xc:TC" opt; do
+while getopts "t:fo:xc:TCG" opt; do
     case "$opt" in
         t)
             # Specify file heading
@@ -436,6 +441,11 @@ while getopts "t:fo:xc:TC" opt; do
         T)
             # Create a Table Of Contents
             ToC=0
+        ;;
+        G)
+            # Optimize output for GitHub Wiki's
+            GITHUB=0
+            CAPITALIZE=0
         ;;
         \?)
             echo "Invalid option: $OPTARG" 1>&2
@@ -489,7 +499,21 @@ if [ -d "$1" ]; then
     if [ $ToC -eq 0 ]; then
         # Write file heading
         outputroot="$(dirname "$filesdir")"
-        OUTPUT="$outputroot/Home.md"
+
+        # Optimize for GitHub
+        if [ $GITHUB -eq 0 ]; then
+            filename="home.md"
+        else
+            # Otherwise keep mkdocs standard
+            filename="index.md"
+        fi
+
+        # Capitalize filename
+        if [ $CAPITALIZE -eq 0 ]; then
+            filename="${filename^}"
+        fi
+
+        OUTPUT="$outputroot/$filename"
 
         # Abort if we have to overwrite a file and the forced flag is off
         if [ -e "$OUTPUT" ]; then
@@ -520,8 +544,13 @@ if [ -d "$1" ]; then
             if [ $EXTENSION -ne 0 ]; then
                 title="${title%.*}"
             fi
-            #echo "$outputroot : $file"
-            write "- [$title]($(strip_multi_slash "${file/$outputroot\//}"))"
+            
+            if [ $GITHUB -eq 0 ]; then
+                write "- [$title]($(basename "$file"))"
+            else
+                write "- [$title]($(strip_multi_slash "${file/$outputroot\//}"))"
+            fi
+            
         done
     fi
 # Processing a single file

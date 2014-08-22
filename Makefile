@@ -11,7 +11,7 @@ all::
 	@echo ""
 
 docs:
-	./shocker.sh -fC -o docs/Home.md shocker.sh
+	./shocker.sh -fG -o docs/Home.md shocker.sh
 
 tag:
 	git tag v$(VERSION)

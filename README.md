@@ -83,6 +83,7 @@ Parameter | Explanation
 -c        | Specify a copyright statement that will be added to the end of each file.
 -T        | Create an index file with a table of contents (Will be named "Home.md"), only applicable when processing directories.
 -C        | Set to capitalize file names and headings.
+-G        | Optimize output for GitHub, rather than mkdocs (this changes how files in the table of contents are linked)
 
 ## Development
 
