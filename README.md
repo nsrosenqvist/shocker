@@ -50,7 +50,7 @@ The wiki is the result of Shocker running on it's own source file. [Check it out
 Clone the repository and then use make.
 
 ```bash
-git clone https://github.com/nsrosenqvist/quickscript.git && cd quickscript
+git clone https://github.com/nsrosenqvist/shockey.git && cd shocker
 make && sudo make install
 ```
 
